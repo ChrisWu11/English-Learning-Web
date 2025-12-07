@@ -1,0 +1,298 @@
+@use 'variables' as *;
+
+// --- 整体容器 ---
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+// --- 左侧导航 (NavSidebar) ---
+.sidebar-nav {
+  width: $sidebar-width;
+  background-color: $sidebar-bg;
+  color: $sidebar-text;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  flex-shrink: 0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  overflow: hidden;
+
+  &.collapsed {
+    width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    opacity: 0;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    color: #bdc3c7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #34495e;
+    padding-bottom: 15px;
+    // 侧边栏小标题字重
+    font-weight: 700;
+  }
+
+  .nav-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    display: block;
+    
+    // 【修改点】：增加字重，让菜单更有质感
+    font-weight: 500; 
+
+    white-space: nowrap;      // 强制不换行
+    overflow: hidden;         // 超出部分隐藏
+    text-overflow: ellipsis;  // 超出显示省略号
+
+    &:hover { background-color: rgba(255,255,255,0.1); }
+    
+    &.active { 
+      background-color: $accent-color; 
+      // 选中状态稍微再粗一点
+      font-weight: 600; 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+  }
+}
+
+// --- 右侧主区域 ---
+.main-wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+}
+
+// 顶部按钮栏
+.top-bar {
+  padding: 15px 40px;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  z-index: 10;
+  flex-shrink: 0;
+
+  .toggle-btn {
+    background: white;
+    border: 1px solid #e0e0e0;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #57606f;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+
+    &:hover {
+      background: $accent-color;
+      color: white;
+      border-color: $accent-color;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+// 滚动区域
+.content-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  padding: 10px 40px 40px 40px;
+  gap: 40px;
+}
+
+// --- 文章卡片 ---
+.article-container {
+  max-width: 800px;
+  width: 100%;
+  background: $card-bg;
+  padding: 50px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  height: fit-content;
+
+  header {
+    margin-bottom: 30px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 20px;
+    
+    h1 { 
+      font-size: 1.8rem; 
+      margin: 0 0 10px 0; 
+      color: $text-color; 
+      // 【修改点】：标题加粗
+      font-weight: 700; 
+    }
+    .subtitle { color: #7f8c8d; font-size: 0.9rem; }
+  }
+
+  .text-body p {
+    font-size: 1.1rem;
+    // 保持之前优化的行距
+    line-height: 2.0; 
+    margin-bottom: 24px;
+    text-align: justify;
+  }
+}
+
+// --- 单词蒙版 ---
+.mask {
+  background-color: $mask-bg;
+  color: transparent;
+  // 保持之前优化的紧凑间距
+  padding: 1px 3px; 
+  margin: 0 1px;
+  
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 2px solid #b0b8c1;
+  user-select: none;
+  display: inline-block;
+  line-height: 1.4; 
+  vertical-align: baseline;
+
+  &:hover { background-color: $mask-hover; }
+
+  &.revealed {
+    background-color: $accent-light;
+    color: $accent-color;
+    // 【修改点】：揭示后的文字加粗，使其在句子中更醒目
+    font-weight: 600; 
+    border-bottom-color: transparent;
+  }
+
+  &.highlight-focus {
+    box-shadow: 0 0 0 2px $highlight-color;
+    background-color: $highlight-bg;
+    color: $highlight-text !important;
+  }
+}
+
+// --- 右侧单词表 ---
+.vocab-panel {
+  width: 280px;
+  flex-shrink: 0;
+  height: fit-content;
+  position: sticky;
+  top: 0;
+
+  .vocab-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    padding: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .vocab-header {
+    font-size: 1.1rem;
+    // 【修改点】：标题加粗
+    font-weight: 700; 
+    margin-bottom: 15px;
+    color: $text-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .vocab-count {
+      background: $accent-color;
+      color: white;
+      font-size: 0.8rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+  }
+
+  .vocab-item {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #57606f;
+    transition: all 0.2s;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      background-color: $bg-color;
+      color: $accent-color;
+      padding-left: 18px;
+    }
+
+    &::before {
+      content: "•";
+      color: #bdc3c7;
+      margin-right: 8px;
+      font-size: 1.2em;
+    }
+  }
+}
+
+// --- 底部控制按钮 ---
+.controls {
+  margin-top: 40px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  border-top: 1px solid #eee;
+  padding-top: 30px;
+
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    // 【修改点】：按钮文字加粗
+    font-weight: 500; 
+    transition: 0.2s;
+    font-size: 0.95rem;
+
+    &.btn-primary {
+      background: $accent-color;
+      color: white;
+      &:hover { background: #2980b9; }
+    }
+
+    &.btn-secondary {
+      background: #ecf0f1;
+      color: #7f8c8d;
+      &:hover { background: #bdc3c7; color: $text-color; }
+    }
+  }
+}
+
+// --- 响应式 ---
+@media (max-width: 1100px) {
+  .vocab-panel { display: none; }
+}
+
+@media (max-width: 768px) {
+  .app-container { flex-direction: column; overflow: auto; height: auto; }
+  .sidebar-nav { width: 100%; height: auto; overflow: visible; padding: 10px; }
+  .sidebar-nav.collapsed { display: none; }
+  
+  .main-wrapper { height: auto; overflow: visible; }
+  .content-scroll-area { padding: 20px; display: block; overflow: visible; }
+  .article-container { padding: 30px 20px; }
+  .top-bar { padding: 10px 20px; }
+}
