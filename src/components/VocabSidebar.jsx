@@ -4,9 +4,7 @@ const VocabSidebar = ({ vocabList }) => {
   const handleItemClick = (maskId) => {
     const maskElement = document.getElementById(maskId);
     if (maskElement) {
-      // 滚动
       maskElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      // 触发高亮 (调用我们在 MaskedPhrase 里挂载的方法)
       if (maskElement.triggerHighlight) {
         maskElement.triggerHighlight();
       }
@@ -15,21 +13,20 @@ const VocabSidebar = ({ vocabList }) => {
 
   if (!vocabList || vocabList.length === 0) return null;
 
+  // 【修改点】：直接返回 vocab-card，因为外层已经被父组件的 div 包裹了
   return (
-    <aside className="vocab-panel">
-      <div className="vocab-card">
-        <div className="vocab-header">
-          Key Phrases <span className="vocab-count">{vocabList.length}</span>
-        </div>
-        <ul className="vocab-list">
-          {vocabList.map((item) => (
-            <li key={item.id} className="vocab-item" onClick={() => handleItemClick(item.id)}>
-              {item.text}
-            </li>
-          ))}
-        </ul>
+    <div className="vocab-card">
+      <div className="vocab-header">
+        Key Phrases <span className="vocab-count">{vocabList.length}</span>
       </div>
-    </aside>
+      <ul className="vocab-list">
+        {vocabList.map((item) => (
+          <li key={item.id} className="vocab-item" onClick={() => handleItemClick(item.id)}>
+            {item.text}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
