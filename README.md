@@ -1,16 +1,44 @@
-# React + Vite
+# 🇬🇧 UK English Study Journal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **一个沉浸式的英语交互学习应用**
+> 专为留英学生打造，通过“语境蒙版”法记忆地道短语。
 
-Currently, two official plugins are available:
+## 📖 项目简介
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**UK English Study Journal** 是一个旨在帮助英语学习者摆脱死记硬背，在真实语境中掌握地道表达的 Web 应用。
 
-## React Compiler
+不同于传统的单词书，本项目基于真实的英国留学生活场景（如早起通勤、超市购物、与人社交等），采用**“文章阅读 + 重点短语遮盖”**的方式，模拟大脑的完形填空思维过程。用户可以在阅读长文的过程中，通过交互式的蒙版强化对词组搭配（Collocations）的记忆。
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ 核心亮点
 
-## Expanding the ESLint configuration
+* **🎯 交互式蒙版阅读**
+    文章中的重点地道短语会被自动“遮盖”。用户在阅读时，点击蒙版即可揭示答案，再次点击可隐藏，支持反复自我测试。
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* **📝 智能词汇清单**
+    系统自动提取文章中所有被遮盖的短语，并在右侧生成可视化的重点词汇表（Key Phrases），让学习重点一目了然。
+
+* **🔍 双向定位与高亮**
+    实现了列表与文章的深度联动：点击右侧词汇表中的短语，视图会自动平滑滚动至文章对应位置，并触发高亮闪烁动画，帮助用户快速锁定上下文。
+
+* **🎨 沉浸式阅读体验**
+    极简优雅的 UI 设计，参考了 Medium 等主流阅读平台的排版风格。左侧导航栏支持折叠，配合 Sticky 布局的词汇表，提供无干扰的专注学习环境。
+
+* **📱 灵活的响应式设计**
+    完美适配桌面端与移动端，无论是在电脑上深度学习，还是在手机上碎片化复习，都能获得流畅的体验。
+
+## 🛠️ 技术栈
+
+本项目使用现代前端技术构建，注重性能与用户体验：
+
+* **核心框架**: React 18
+* **构建工具**: Vite
+* **样式处理**: SCSS (Sass) - 纯手写模块化样式，无第三方 UI 库依赖，追求极致的轻量化与定制度。
+* **数据驱动**: 采用配置化的数据结构，轻松扩展新的课程内容。
+
+## 🤝 贡献与反馈
+
+如果你对项目有任何改进建议，或者想分享更多地道的英语学习资料，欢迎在 GitHub 上提交 Issue 或 Pull Request。
+
+---
+
+Made with ❤️ by **Chris Wu**
