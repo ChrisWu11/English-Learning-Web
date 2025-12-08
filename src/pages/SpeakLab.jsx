@@ -15,12 +15,14 @@ export default function SpeakLab() {
     'London is a city full of stories.\nSpeak clearly to be understood.\nPractice makes perfect!'
   );
   const [activePreset, setActivePreset] = useState('');
+  const [showPresetDrawer, setShowPresetDrawer] = useState(false);
 
   const sentences = useMemo(() => splitIntoSentences(input), [input]);
 
   const handlePresetSelect = (preset) => {
     setInput(preset.lines.join('\n'));
     setActivePreset(preset.id);
+    setShowPresetDrawer(false);
   };
 
   return (
@@ -36,65 +38,44 @@ export default function SpeakLab() {
               使用浏览器自带的语音合成功能 (SpeechSynthesis)、录音 (MediaRecorder)、语音识别
               (SpeechRecognition) 打造的零成本口语练习工具。输入你的练习文本，逐句练到熟练。
             </p>
-            <div className="pill-row">
-              <span className="pill">英式发音 TTS</span>
-              <span className="pill">录音 + 回放</span>
-              <span className="pill">自动语音识别</span>
-              <span className="pill">编辑距离评分</span>
-            </div>
+          <div className="pill-row">
+            <span className="pill">英式发音 TTS</span>
+            <span className="pill">录音 + 回放</span>
+            <span className="pill">自动语音识别</span>
+            <span className="pill">编辑距离评分</span>
           </div>
-          <Link className="glass-card back-card" to="/">
-            <div className="back-icon" aria-hidden>←</div>
-            <div>
-              <p className="glass-card__title">返回文章阅读</p>
-              <p className="glass-card__desc">回到首页继续阅读内容</p>
-            </div>
-          </Link>
-        </header>
+        </div>
+        <Link className="glass-card back-card" to="/">
+          <div className="back-icon" aria-hidden>←</div>
+          <div>
+            <p className="glass-card__title">返回文章阅读</p>
+            <p className="glass-card__desc">回到首页继续阅读内容</p>
+          </div>
+        </Link>
+      </header>
 
-        <section className="preset-panel">
-          <div className="preset-panel__header">
-            <div>
-              <p className="label">例句目录（点击一键导入）</p>
-              <p className="muted">所有内容以 JSON 定义，便于扩展或自定义。</p>
-            </div>
-            <div className="hint">选择适合的场景，自动填充到下方输入框。</div>
+      <section className="input-panel">
+        <div className="panel-header">
+          <div>
+            <p className="label">输入练习文本（自动按句拆分）</p>
+            <p className="muted">英文最佳，支持标点 . ? ! 作为分句依据。</p>
           </div>
-          <div className="preset-grid">
-            {presets.map((preset) => {
-              const isActive = activePreset === preset.id;
-              return (
-                <button
-                  key={preset.id}
-                  className={`preset-card ${isActive ? 'preset-card--active' : ''}`}
-                  onClick={() => handlePresetSelect(preset)}
-                  type="button"
-                >
-                  <div className="preset-card__meta">
-                    <p className="label">{preset.title}</p>
-                    <span className="badge">{preset.lines.length} 句</span>
-                  </div>
-                  <p className="preset-card__desc">{preset.description}</p>
-                  <pre className="preset-card__json">{JSON.stringify(preset.lines, null, 2)}</pre>
-                  <span className="preset-card__cta">{isActive ? '已导入' : '点击导入'}</span>
-                </button>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="input-panel">
-          <div className="panel-header">
-            <div>
-              <p className="label">输入练习文本（自动按句拆分）</p>
-              <p className="muted">英文最佳，支持标点 . ? ! 作为分句依据。</p>
-            </div>
+          <div className="panel-actions">
             <div className="hint">🔥 录音时将同时触发 en-GB 的语音识别</div>
+            <button
+              type="button"
+              className="preset-trigger"
+              onClick={() => setShowPresetDrawer(true)}
+            >
+              <span className="icon" aria-hidden>🗂️</span>
+              <span>打开例句目录</span>
+            </button>
           </div>
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            rows={5}
+        </div>
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          rows={5}
             placeholder="Paste or type any English paragraph here..."
           />
           <div className="split-preview">
@@ -105,11 +86,11 @@ export default function SpeakLab() {
         <section className="cards-grid">
           {sentences.length === 0 && (
             <div className="empty">请输入内容以生成训练卡片。</div>
-          )}
-          {sentences.map((sentence, idx) => (
-            <SentenceTrainer key={`${sentence}-${idx}`} sentence={sentence} />
-          ))}
-        </section>
+        )}
+        {sentences.map((sentence, idx) => (
+          <SentenceTrainer key={`${sentence}-${idx}`} sentence={sentence} />
+        ))}
+      </section>
       </div>
 
       <footer className="speaklab-footer">
@@ -124,6 +105,52 @@ export default function SpeakLab() {
           </a>
         </div>
       </footer>
+
+      {showPresetDrawer && (
+        <div className="preset-drawer" role="dialog" aria-modal="true">
+          <div className="preset-drawer__backdrop" onClick={() => setShowPresetDrawer(false)} />
+          <div className="preset-drawer__panel">
+            <div className="preset-drawer__header">
+              <div>
+                <p className="eyebrow">例句目录</p>
+                <h3>一键导入练习素材</h3>
+                <p className="muted">
+                  所有例句均为 JSON 定义，点击卡片即可填充到输入框，方便快速开始。
+                </p>
+              </div>
+              <button
+                type="button"
+                className="close-btn"
+                onClick={() => setShowPresetDrawer(false)}
+                aria-label="关闭例句目录"
+              >
+                ×
+              </button>
+            </div>
+            <div className="preset-grid compact">
+              {presets.map((preset) => {
+                const isActive = activePreset === preset.id;
+                return (
+                  <button
+                    key={preset.id}
+                    className={`preset-card ${isActive ? 'preset-card--active' : ''}`}
+                    onClick={() => handlePresetSelect(preset)}
+                    type="button"
+                  >
+                    <div className="preset-card__meta">
+                      <p className="label">{preset.title}</p>
+                      <span className="badge">{preset.lines.length} 句</span>
+                    </div>
+                    <p className="preset-card__desc">{preset.description}</p>
+                    <pre className="preset-card__json">{JSON.stringify(preset.lines, null, 2)}</pre>
+                    <span className="preset-card__cta">{isActive ? '已导入' : '点击导入'}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
