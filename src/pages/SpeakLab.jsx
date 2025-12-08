@@ -66,6 +66,19 @@ export default function SpeakLab() {
           <SentenceTrainer key={`${sentence}-${idx}`} sentence={sentence} />
         ))}
       </section>
+
+      <footer className="speaklab-footer">
+        <div>
+          <p className="eyebrow">Thanks for visiting SpeakLab</p>
+          <p>完全基于浏览器原生 API 打造的零成本口语练习 MVP。</p>
+        </div>
+        <div>
+          <p>作者：Chris Wu</p>
+          <a href="https://github.com/ChrisHughes24/English-Learning-Web" target="_blank" rel="noreferrer">
+            GitHub 仓库
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }

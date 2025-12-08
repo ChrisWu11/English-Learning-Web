@@ -2,6 +2,19 @@ import { useEffect, useRef, useState } from 'react';
 
 const TARGET_SAMPLES = 64;
 
+const captureSnapshot = (analyser, dataArray) => {
+  if (!analyser || !dataArray) return [];
+  analyser.getByteTimeDomainData(dataArray);
+  const { length } = dataArray;
+  const step = Math.max(1, Math.floor(length / TARGET_SAMPLES));
+  const snapshot = [];
+  for (let i = 0; i < length; i += step) {
+    const value = (dataArray[i] - 128) / 128;
+    snapshot.push(value);
+  }
+  return snapshot;
+};
+
 export function useRecorder() {
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState('');
@@ -36,14 +49,7 @@ export function useRecorder() {
 
   const pumpWaveform = () => {
     if (!analyserRef.current || !dataArrayRef.current) return;
-    analyserRef.current.getByteTimeDomainData(dataArrayRef.current);
-    const { length } = dataArrayRef.current;
-    const step = Math.max(1, Math.floor(length / TARGET_SAMPLES));
-    const snapshot = [];
-    for (let i = 0; i < length; i += step) {
-      const value = (dataArrayRef.current[i] - 128) / 128;
-      snapshot.push(value);
-    }
+    const snapshot = captureSnapshot(analyserRef.current, dataArrayRef.current);
     setWaveform(snapshot);
     animationRef.current = requestAnimationFrame(pumpWaveform);
   };
@@ -61,7 +67,6 @@ export function useRecorder() {
       analyser.fftSize = 1024;
       dataArrayRef.current = new Uint8Array(analyser.fftSize);
       source.connect(analyser);
-      analyser.connect(audioContext.destination);
 
       audioContextRef.current = audioContext;
       analyserRef.current = analyser;
@@ -76,9 +81,9 @@ export function useRecorder() {
         const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
         if (audioURL) URL.revokeObjectURL(audioURL);
         setAudioURL(URL.createObjectURL(blob));
+        setWaveform(captureSnapshot(analyserRef.current, dataArrayRef.current));
         chunksRef.current = [];
         teardownStream();
-        setWaveform([]);
         if (animationRef.current) cancelAnimationFrame(animationRef.current);
       };
       mediaRecorderRef.current = recorder;

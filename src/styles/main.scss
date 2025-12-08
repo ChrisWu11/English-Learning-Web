@@ -5,7 +5,7 @@
 
 html, body {
   height: 100%; width: 100%;
-  overflow: hidden; /* 禁止 body 滚动 */
+  overflow-x: hidden;
 }
 
 body {

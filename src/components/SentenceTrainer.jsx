@@ -28,6 +28,7 @@ function createReferenceWaveform(text = '') {
 
 export default function SentenceTrainer({ sentence }) {
   const [note, setNote] = useState('');
+  const [isWaveModalOpen, setIsWaveModalOpen] = useState(false);
 
   const {
     isSupported: recorderSupported,
@@ -88,6 +89,7 @@ export default function SentenceTrainer({ sentence }) {
       setNote('Listening...');
       await startRecording();
       startRecognition();
+      setIsWaveModalOpen(true);
     }
   };
 
@@ -96,6 +98,13 @@ export default function SentenceTrainer({ sentence }) {
     const audio = new Audio(audioURL);
     audio.play();
   };
+
+  const showWaveformModal = () => {
+    if (!waveform.length && !isRecording) return;
+    setIsWaveModalOpen(true);
+  };
+
+  const hideWaveformModal = () => setIsWaveModalOpen(false);
 
   return (
     <div className="sentence-card">
@@ -124,22 +133,54 @@ export default function SentenceTrainer({ sentence }) {
         {recorderError && <div className="error">录音错误：{recorderError}</div>}
         {speechError && <div className="error">识别错误：{speechError}</div>}
 
-        <div className="waveform-grid">
-          <WaveformCanvas title="例句波形" data={referenceWaveform} accent="var(--accent)" />
-          <WaveformCanvas title="你的录音" data={waveform} accent="var(--primary)" />
-        </div>
-
         <div className="result">
-          <div>
-            <p className="label">识别结果</p>
+          <div className="result__text-block">
+            <p className="label">识别文本</p>
             <p className="result__text">{transcript || '暂无结果，请录音'}</p>
           </div>
           <div className="score">
             <p className="label">得分</p>
             <p className="score__value">{calculatedScore === null ? '--' : `${calculatedScore} / 100`}</p>
+            <button
+              className="ghost small"
+              onClick={showWaveformModal}
+              disabled={!waveform.length && !isRecording}
+            >
+              查看波形
+            </button>
           </div>
         </div>
       </div>
+
+      {isWaveModalOpen && (
+        <div className="waveform-modal" role="dialog" aria-modal="true">
+          <div className="waveform-modal__backdrop" onClick={hideWaveformModal} />
+          <div className="waveform-modal__content">
+            <header className="waveform-modal__header">
+              <div>
+                <p className="eyebrow">波形预览</p>
+                <h3>{sentence}</h3>
+                <p className="muted">例句波形 + {isRecording ? '实时录音波形' : '最近录音波形'}</p>
+              </div>
+              <div className="waveform-modal__actions">
+                <span className={`status ${isRecording ? 'live' : ''}`}>
+                  {isRecording ? '录音中' : '预览模式'}
+                </span>
+                <button className="outline" onClick={hideWaveformModal}>关闭</button>
+              </div>
+            </header>
+
+            <div className="waveform-modal__grid">
+              <WaveformCanvas title="例句波形" data={referenceWaveform} accent="var(--accent)" />
+              <WaveformCanvas title="你的录音" data={waveform} accent="var(--primary)" />
+            </div>
+
+            {!waveform.length && !isRecording && (
+              <div className="empty subtle">暂无录音波形，点击开始录音后实时生成。</div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
