@@ -57,7 +57,7 @@
   .hero-meta {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 12px;
     flex-wrap: wrap;
   }
@@ -104,11 +104,19 @@
     border-radius: 16px;
     padding: 20px;
     color: #1f2a44;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    transition: transform 0.12s ease, box-shadow 0.14s ease;
+
+    &:hover { transform: translateY(-2px); box-shadow: 0 24px 90px rgba(15, 23, 42, 0.08); }
+    &:active { transform: translateY(-1px); }
 
     &__title {
       font-weight: 700;
       font-size: 18px;
-      margin-top: 8px;
+      margin-top: 0;
     }
 
     &__desc {
@@ -116,6 +124,27 @@
       font-size: 14px;
       margin-top: 6px;
     }
+  }
+
+  .back-card {
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(236, 244, 255, 0.9));
+    border: 1px solid #dbe5ff;
+    color: #1f2a44;
+
+    .glass-card__title { color: #0f172a; }
+    .glass-card__desc { color: #475569; }
+  }
+
+  .back-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #4f46e5, #5a6bff);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    box-shadow: 0 14px 40px rgba(90, 107, 255, 0.25);
   }
 }
 

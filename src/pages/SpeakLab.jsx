@@ -23,9 +23,6 @@ export default function SpeakLab() {
           <div>
             <div className="hero-meta">
               <p className="eyebrow">SpeakLab · Browser-only MVP</p>
-              <Link className="back-link back-link--soft" to="/">
-                <span aria-hidden>←</span> 返回文章阅读
-              </Link>
             </div>
             <h1>免费英式口语训练房</h1>
             <p className="lede">
@@ -39,11 +36,13 @@ export default function SpeakLab() {
               <span className="pill">编辑距离评分</span>
             </div>
           </div>
-          <div className="glass-card">
-            <p>立即开始</p>
-            <p className="glass-card__title">把你的学习材料复制进来</p>
-            <p className="glass-card__desc">按句拆分，生成训练卡片。</p>
-          </div>
+          <Link className="glass-card back-card" to="/">
+            <div className="back-icon" aria-hidden>←</div>
+            <div>
+              <p className="glass-card__title">返回文章阅读</p>
+              <p className="glass-card__desc">回到首页继续阅读内容</p>
+            </div>
+          </Link>
         </header>
 
         <section className="input-panel">
