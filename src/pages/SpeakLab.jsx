@@ -16,13 +16,24 @@ export default function SpeakLab() {
   );
   const [activePreset, setActivePreset] = useState('');
   const [showPresetDrawer, setShowPresetDrawer] = useState(false);
+  const [drawerActive, setDrawerActive] = useState(false);
 
   const sentences = useMemo(() => splitIntoSentences(input), [input]);
 
   const handlePresetSelect = (preset) => {
     setInput(preset.lines.join('\n'));
     setActivePreset(preset.id);
-    setShowPresetDrawer(false);
+    handleCloseDrawer();
+  };
+
+  const handleOpenDrawer = () => {
+    setShowPresetDrawer(true);
+    requestAnimationFrame(() => setDrawerActive(true));
+  };
+
+  const handleCloseDrawer = () => {
+    setDrawerActive(false);
+    setTimeout(() => setShowPresetDrawer(false), 260);
   };
 
   return (
@@ -65,7 +76,7 @@ export default function SpeakLab() {
             <button
               type="button"
               className="preset-trigger"
-              onClick={() => setShowPresetDrawer(true)}
+              onClick={handleOpenDrawer}
             >
               <span className="icon" aria-hidden>🗂️</span>
               <span>打开例句目录</span>
@@ -107,8 +118,8 @@ export default function SpeakLab() {
       </footer>
 
       {showPresetDrawer && (
-        <div className="preset-drawer" role="dialog" aria-modal="true">
-          <div className="preset-drawer__backdrop" onClick={() => setShowPresetDrawer(false)} />
+        <div className={`preset-drawer ${drawerActive ? 'is-open' : ''}`} role="dialog" aria-modal="true">
+          <div className="preset-drawer__backdrop" onClick={handleCloseDrawer} />
           <div className="preset-drawer__panel">
             <div className="preset-drawer__header">
               <div>
@@ -121,32 +132,34 @@ export default function SpeakLab() {
               <button
                 type="button"
                 className="close-btn"
-                onClick={() => setShowPresetDrawer(false)}
+                onClick={handleCloseDrawer}
                 aria-label="关闭例句目录"
               >
-                ×
+                <span aria-hidden>✕</span>
               </button>
             </div>
-            <div className="preset-grid compact">
-              {presets.map((preset) => {
-                const isActive = activePreset === preset.id;
-                return (
-                  <button
-                    key={preset.id}
-                    className={`preset-card ${isActive ? 'preset-card--active' : ''}`}
-                    onClick={() => handlePresetSelect(preset)}
-                    type="button"
-                  >
-                    <div className="preset-card__meta">
-                      <p className="label">{preset.title}</p>
-                      <span className="badge">{preset.lines.length} 句</span>
-                    </div>
-                    <p className="preset-card__desc">{preset.description}</p>
-                    <pre className="preset-card__json">{JSON.stringify(preset.lines, null, 2)}</pre>
-                    <span className="preset-card__cta">{isActive ? '已导入' : '点击导入'}</span>
-                  </button>
-                );
-              })}
+            <div className="preset-drawer__body">
+              <div className="preset-grid compact">
+                {presets.map((preset) => {
+                  const isActive = activePreset === preset.id;
+                  return (
+                    <button
+                      key={preset.id}
+                      className={`preset-card ${isActive ? 'preset-card--active' : ''}`}
+                      onClick={() => handlePresetSelect(preset)}
+                      type="button"
+                    >
+                      <div className="preset-card__meta">
+                        <p className="label">{preset.title}</p>
+                        <span className="badge">{preset.lines.length} 句</span>
+                      </div>
+                      <p className="preset-card__desc">{preset.description}</p>
+                      <pre className="preset-card__json">{JSON.stringify(preset.lines, null, 2)}</pre>
+                      <span className="preset-card__cta">{isActive ? '已导入' : '点击导入'}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
