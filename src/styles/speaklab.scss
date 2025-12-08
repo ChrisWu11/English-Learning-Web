@@ -744,4 +744,8 @@ button {
   .waveform-modal__grid {
     grid-template-columns: 1fr;
   }
+
+  .hint {
+    display: none;
+  }
 }

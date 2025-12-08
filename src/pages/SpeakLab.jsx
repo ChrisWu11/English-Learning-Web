@@ -46,7 +46,7 @@ export default function SpeakLab() {
             </div>
             <h1>免费英式口语训练房</h1>
             <p className="lede">
-              使用浏览器自带的语音合成功能 (SpeechSynthesis)、录音 (MediaRecorder)、语音识别
+              使用语音合成功能 (SpeechSynthesis)、录音 (MediaRecorder)、语音识别
               (SpeechRecognition) 打造的零成本口语练习工具。输入你的练习文本，逐句练到熟练。
             </p>
           <div className="pill-row">
