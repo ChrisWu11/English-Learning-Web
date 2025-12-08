@@ -37,9 +37,15 @@ const ArticleReader = ({
       <div className="content-scroll-area">
         {/* 文章区域 */}
         <div className="article-container">
-          <header>
-            <h1>{article.title}</h1>
-            <p className="subtitle">Click masks to reveal / 点击蒙版显示</p>
+          <header className="article-header">
+            <div>
+              <h1>{article.title}</h1>
+              <p className="subtitle">Click masks to reveal / 点击蒙版显示</p>
+            </div>
+            <div className="speaklab-cta">
+              <p className="cta-sub">Free browser-native speaking lab</p>
+              <a className="btn-cta" href="/speaklab">Go to SpeakLab</a>
+            </div>
           </header>
 
           <div className="text-body">

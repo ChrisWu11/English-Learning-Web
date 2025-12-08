@@ -147,18 +147,64 @@
   box-shadow: 0 4px 20px rgba(0,0,0,0.05);
   height: fit-content;
 
-  header {
+  header.article-header {
     margin-bottom: 30px;
     border-bottom: 2px solid #f0f0f0;
     padding-bottom: 20px;
-    
-    h1 { 
-      font-size: 1.8rem; 
-      margin: 0 0 10px 0; 
-      color: $text-color; 
-      font-weight: 700; 
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+
+    h1 {
+      font-size: 1.8rem;
+      margin: 0 0 10px 0;
+      color: $text-color;
+      font-weight: 700;
     }
+
     .subtitle { color: #7f8c8d; font-size: 0.9rem; }
+
+    .speaklab-cta {
+      margin-left: auto;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      min-width: 220px;
+
+      .cta-sub {
+        margin: 0;
+        color: #6c7a89;
+        font-size: 0.9rem;
+      }
+
+      .btn-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 16px;
+        border-radius: 12px;
+        background: linear-gradient(120deg, #4b7bec, #20bf6b);
+        color: white;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        text-decoration: none;
+        box-shadow: 0 10px 25px rgba(32, 191, 107, 0.25);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 28px rgba(75, 123, 236, 0.25);
+          filter: brightness(1.05);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
   }
 
   .text-body p {
