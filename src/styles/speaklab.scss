@@ -10,12 +10,6 @@
   gap: 20px;
 }
 
-.speaklab-topbar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
 .back-link {
   display: inline-flex;
   align-items: center;
@@ -36,6 +30,14 @@
   &:active {
     transform: translateY(1px);
   }
+
+  &--soft {
+    background: #e8edff;
+    box-shadow: 0 8px 26px rgba(90, 107, 255, 0.16);
+    color: #364198;
+    padding: 8px 12px;
+    font-weight: 600;
+  }
 }
 
 .speaklab-main {
@@ -51,6 +53,14 @@
   gap: 24px;
   align-items: center;
   margin-bottom: 32px;
+
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
 
   h1 {
     font-size: 32px;

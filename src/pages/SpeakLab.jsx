@@ -18,15 +18,15 @@ export default function SpeakLab() {
 
   return (
     <div className="speaklab-page">
-      <div className="speaklab-topbar">
-        <Link className="back-link" to="/">
-          <span aria-hidden>←</span> 返回文章阅读
-        </Link>
-      </div>
       <div className="speaklab-main">
         <header className="speaklab-hero">
           <div>
-            <p className="eyebrow">SpeakLab · Browser-only MVP</p>
+            <div className="hero-meta">
+              <p className="eyebrow">SpeakLab · Browser-only MVP</p>
+              <Link className="back-link back-link--soft" to="/">
+                <span aria-hidden>←</span> 返回文章阅读
+              </Link>
+            </div>
             <h1>免费英式口语训练房</h1>
             <p className="lede">
               使用浏览器自带的语音合成功能 (SpeechSynthesis)、录音 (MediaRecorder)、语音识别
