@@ -35,7 +35,6 @@ const ArticleReader = ({
         </button>
 
         <div className="top-actions">
-          <p className="cta-sub">Free browser-native speaking lab</p>
           <Link className="btn-cta" to="/speaklab">Go to SpeakLab</Link>
         </div>
       </div>
