@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
 import NavSidebar from './components/NavSidebar';
 import ArticleReader from './components/ArticleReader';
@@ -83,11 +84,13 @@ function ArticleApp() {
 }
 
 function App() {
-  // lightweight路由：当访问 /speaklab 时渲染口语训练 MVP
-  if (window.location.pathname === '/speaklab') {
-    return <SpeakLab />;
-  }
-  return <ArticleApp />;
+  return (
+    <Routes>
+      <Route path="/" element={<ArticleApp />} />
+      <Route path="/speaklab" element={<SpeakLab />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 }
 
 export default App;

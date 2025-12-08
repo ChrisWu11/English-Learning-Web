@@ -1,0 +1,8 @@
+{
+  "name": "react-router-dom",
+  "version": "6.28.0-local",
+  "type": "module",
+  "main": "./index.jsx",
+  "license": "MIT",
+  "description": "Lightweight in-repo build of React Router DOM for offline environments."
+}

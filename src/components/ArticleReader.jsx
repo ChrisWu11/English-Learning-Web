@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import MaskedPhrase from './MaskedPhrase';
 import VocabSidebar from './VocabSidebar';
 import '../styles/Layout.scss';
@@ -44,7 +45,7 @@ const ArticleReader = ({
             </div>
             <div className="speaklab-cta">
               <p className="cta-sub">Free browser-native speaking lab</p>
-              <a className="btn-cta" href="/speaklab">Go to SpeakLab</a>
+              <Link className="btn-cta" to="/speaklab">Go to SpeakLab</Link>
             </div>
           </header>
 
