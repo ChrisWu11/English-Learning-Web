@@ -33,6 +33,11 @@ const ArticleReader = ({
             <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </button>
+
+        <div className="top-actions">
+          <p className="cta-sub">Free browser-native speaking lab</p>
+          <Link className="btn-cta" to="/speaklab">Go to SpeakLab</Link>
+        </div>
       </div>
 
       <div className="content-scroll-area">
@@ -42,10 +47,6 @@ const ArticleReader = ({
             <div>
               <h1>{article.title}</h1>
               <p className="subtitle">Click masks to reveal / 点击蒙版显示</p>
-            </div>
-            <div className="speaklab-cta">
-              <p className="cta-sub">Free browser-native speaking lab</p>
-              <Link className="btn-cta" to="/speaklab">Go to SpeakLab</Link>
             </div>
           </header>
 
