@@ -129,15 +129,6 @@
 
   .top-actions {
     margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: rgba(255,255,255,0.8);
-    border: 1px solid #e9edf3;
-    border-radius: 999px;
-    padding: 8px 12px 8px 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-    backdrop-filter: blur(12px);
 
     .cta-sub {
       margin: 0;
@@ -411,15 +402,6 @@
     .toggle-btn { width: 44px; height: 44px; }
 
     .top-actions {
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.85);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.04);
-      flex: 1;
-      min-width: 0;
-      justify-content: flex-end;
-
       .cta-sub { display: none; }
 
       .btn-cta {
