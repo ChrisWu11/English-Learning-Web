@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import SentenceTrainer from '../components/SentenceTrainer';
 import '../styles/speaklab.scss';
 
@@ -17,6 +18,11 @@ export default function SpeakLab() {
 
   return (
     <div className="speaklab-page">
+      <div className="speaklab-topbar">
+        <Link className="back-link" to="/">
+          <span aria-hidden>←</span> 返回文章阅读
+        </Link>
+      </div>
       <div className="speaklab-main">
         <header className="speaklab-hero">
           <div>
