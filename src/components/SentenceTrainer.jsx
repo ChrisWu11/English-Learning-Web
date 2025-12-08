@@ -29,6 +29,7 @@ function createReferenceWaveform(text = '') {
 export default function SentenceTrainer({ sentence }) {
   const [note, setNote] = useState('');
   const [isWaveModalOpen, setIsWaveModalOpen] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const {
     isSupported: recorderSupported,
@@ -48,6 +49,7 @@ export default function SentenceTrainer({ sentence }) {
     isListening,
     startRecognition,
     stopRecognition,
+    resetTranscript,
   } = useSpeechRecognition('en-GB');
 
   const speechReady = useMemo(
@@ -60,9 +62,9 @@ export default function SentenceTrainer({ sentence }) {
   const referenceWaveform = useMemo(() => createReferenceWaveform(sentence), [sentence]);
 
   const calculatedScore = useMemo(() => {
-    if (!normalizedTranscript) return null;
+    if (!hasSubmitted || !normalizedTranscript) return null;
     return similarityScore(normalizedOrigin, normalizedTranscript);
-  }, [normalizedOrigin, normalizedTranscript]);
+  }, [hasSubmitted, normalizedOrigin, normalizedTranscript]);
 
   const handleSpeak = () => {
     if (!speechReady) return;
@@ -74,23 +76,20 @@ export default function SentenceTrainer({ sentence }) {
     window.speechSynthesis.speak(utterance);
   };
 
-  const handleRecordToggle = async () => {
+  const beginRecordingFlow = async () => {
     if (!recorderSupported || !speechSupported) {
       setNote('Your browser does not fully support the required audio APIs.');
       return;
     }
 
-    if (isRecording) {
-      stopRecording();
-      stopRecognition();
-      setNote('Processing your speech...');
-    } else {
-      resetRecording();
-      setNote('Listening...');
-      await startRecording();
-      startRecognition();
-      setIsWaveModalOpen(true);
-    }
+    stopRecording();
+    stopRecognition();
+    resetTranscript();
+    resetRecording();
+    setHasSubmitted(false);
+    setNote('Listening...');
+    await startRecording();
+    startRecognition();
   };
 
   const handlePlay = () => {
@@ -99,12 +98,39 @@ export default function SentenceTrainer({ sentence }) {
     audio.play();
   };
 
+  const openWaveformModal = async () => {
+    setIsWaveModalOpen(true);
+    if (!isRecording && !audioURL) {
+      await beginRecordingFlow();
+    }
+  };
+
   const showWaveformModal = () => {
     if (!waveform.length && !isRecording) return;
     setIsWaveModalOpen(true);
   };
 
-  const hideWaveformModal = () => setIsWaveModalOpen(false);
+  const handleStopInModal = () => {
+    if (!isRecording) return;
+    stopRecording();
+    stopRecognition();
+    setNote('Processing your speech...');
+  };
+
+  const handleReRecord = async () => {
+    await beginRecordingFlow();
+    setIsWaveModalOpen(true);
+  };
+
+  const hideWaveformModal = () => {
+    if (isRecording) {
+      stopRecording();
+      stopRecognition();
+    }
+    setHasSubmitted(true);
+    setNote(transcript ? '评分已自动更新' : '未检测到有效识别');
+    setIsWaveModalOpen(false);
+  };
 
   return (
     <div className="sentence-card">
@@ -115,11 +141,11 @@ export default function SentenceTrainer({ sentence }) {
             🔈 英式朗读
           </button>
           <button
-            className={isRecording ? 'danger' : 'primary'}
-            onClick={handleRecordToggle}
+            className="primary"
+            onClick={openWaveformModal}
             disabled={!recorderSupported || !speechSupported}
           >
-            {isRecording ? '停止录音' : '开始录音'}
+            {isRecording ? '录音中...' : '开始录音'}
           </button>
           <button className="outline" onClick={handlePlay} disabled={!audioURL}>
             ▶️ 播放录音
@@ -141,11 +167,7 @@ export default function SentenceTrainer({ sentence }) {
           <div className="score">
             <p className="label">得分</p>
             <p className="score__value">{calculatedScore === null ? '--' : `${calculatedScore} / 100`}</p>
-            <button
-              className="ghost small"
-              onClick={showWaveformModal}
-              disabled={!waveform.length && !isRecording}
-            >
+            <button className="ghost small" onClick={showWaveformModal} disabled={!waveform.length && !isRecording}>
               查看波形
             </button>
           </div>
@@ -166,7 +188,14 @@ export default function SentenceTrainer({ sentence }) {
                 <span className={`status ${isRecording ? 'live' : ''}`}>
                   {isRecording ? '录音中' : '预览模式'}
                 </span>
-                <button className="outline" onClick={hideWaveformModal}>关闭</button>
+                {isRecording ? (
+                  <button className="danger" onClick={handleStopInModal}>停止录音</button>
+                ) : (
+                  <>
+                    <button className="ghost" onClick={handleReRecord}>重新录制</button>
+                    <button className="primary" onClick={hideWaveformModal}>完成并评分</button>
+                  </>
+                )}
               </div>
             </header>
 

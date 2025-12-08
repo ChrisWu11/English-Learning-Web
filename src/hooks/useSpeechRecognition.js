@@ -61,6 +61,10 @@ export function useSpeechRecognition(lang = 'en-GB') {
     recognitionRef.current.stop();
   };
 
+  const resetTranscript = () => {
+    setTranscript('');
+  };
+
   return {
     supported,
     isListening,
@@ -68,5 +72,6 @@ export function useSpeechRecognition(lang = 'en-GB') {
     error,
     startRecognition,
     stopRecognition,
+    resetTranscript,
   };
 }
