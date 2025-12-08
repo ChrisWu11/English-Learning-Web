@@ -135,22 +135,24 @@ export default function SentenceTrainer({ sentence }) {
   return (
     <div className="sentence-card">
       <div className="sentence-card__header">
+        <p className="sentence-card__label">例句</p>
         <p className="sentence-card__text">{sentence}</p>
-        <div className="sentence-card__actions">
-          <button className="ghost" onClick={handleSpeak} disabled={!speechReady}>
-            🔈 英式朗读
-          </button>
-          <button
-            className="primary"
-            onClick={openWaveformModal}
-            disabled={!recorderSupported || !speechSupported}
-          >
-            {isRecording ? '录音中...' : '开始录音'}
-          </button>
-          <button className="outline" onClick={handlePlay} disabled={!audioURL}>
-            ▶️ 播放录音
-          </button>
-        </div>
+      </div>
+
+      <div className="sentence-card__actions">
+        <button className="ghost" onClick={handleSpeak} disabled={!speechReady}>
+          🔈 英式朗读
+        </button>
+        <button
+          className="primary"
+          onClick={openWaveformModal}
+          disabled={!recorderSupported || !speechSupported}
+        >
+          {isRecording ? '录音中...' : '开始录音'}
+        </button>
+        <button className="outline" onClick={handlePlay} disabled={!audioURL}>
+          ▶️ 播放录音
+        </button>
       </div>
 
       <div className="sentence-card__body">

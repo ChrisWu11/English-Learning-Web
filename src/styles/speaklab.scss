@@ -148,22 +148,28 @@
 
   &__header {
     display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    align-items: center;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__label {
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #6c7a97;
   }
 
   &__text {
     font-weight: 700;
     color: #0f172a;
-    flex: 1;
+    line-height: 1.5;
   }
 
   &__actions {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 
   &__body {
@@ -423,17 +429,19 @@ button {
   .speaklab-hero {
     grid-template-columns: 1fr;
   }
-
-  .sentence-card__header {
-    flex-direction: column;
-  }
-
-  .sentence-card__actions {
-    justify-content: flex-start;
-  }
 }
 
 @media (max-width: 720px) {
+  .speaklab-page {
+    padding: 20px 16px 110px;
+  }
+
+  .speaklab-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
   .waveform-modal__header {
     flex-direction: column;
     align-items: flex-start;
