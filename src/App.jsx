@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
 import NavSidebar from './components/NavSidebar';
 import ArticleReader from './components/ArticleReader';
 import { articles } from './data';
 import { useArticleParser } from './hooks/useArticleParser';
+import SpeakLab from './pages/SpeakLab';
 import './styles/main.scss';
 
-function App() {
+function ArticleApp() {
   const [activeArticleId, setActiveArticleId] = useState(articles[0].id);
-  
+
   // 左侧导航状态 (默认: 手机收起, 桌面展开)
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(window.innerWidth < 768);
   
@@ -78,6 +80,16 @@ function App() {
         />
       }
     />
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<ArticleApp />} />
+      <Route path="/speaklab" element={<SpeakLab />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 

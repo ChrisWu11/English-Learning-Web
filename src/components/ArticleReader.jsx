@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import MaskedPhrase from './MaskedPhrase';
 import VocabSidebar from './VocabSidebar';
 import '../styles/Layout.scss';
@@ -6,17 +7,19 @@ import '../styles/Layout.scss';
 const ArticleReader = ({ 
   article, 
   paragraphs, 
-  vocabList, 
-  onToggleNav, 
-  isVocabOpen, 
-  onToggleVocab 
+  vocabList,
+  onToggleNav,
+  isVocabOpen,
+  onToggleVocab
 }) => {
   const [revealTrigger, setRevealTrigger] = useState(0);
-  const [resetTrigger, setResetTrigger] = useState(0);
+  const [resetCounter, setResetCounter] = useState(0);
+
+  const resetTrigger = Array.from(article.id).reduce((acc, char) => acc + char.charCodeAt(0), 0) + resetCounter;
 
   useEffect(() => {
-    document.querySelector('.content-scroll-area').scrollTop = 0;
-    setResetTrigger(t => t + 1);
+    const area = document.querySelector('.content-scroll-area');
+    if (area) area.scrollTop = 0;
   }, [article.id]);
 
   return (
@@ -30,14 +33,20 @@ const ArticleReader = ({
             <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </button>
+
+        <div className="top-actions">
+          <Link className="btn-cta" to="/speaklab">Go to SpeakLab</Link>
+        </div>
       </div>
 
       <div className="content-scroll-area">
         {/* 文章区域 */}
         <div className="article-container">
-          <header>
-            <h1>{article.title}</h1>
-            <p className="subtitle">Click masks to reveal / 点击蒙版显示</p>
+          <header className="article-header">
+            <div>
+              <h1>{article.title}</h1>
+              <p className="subtitle">Click masks to reveal / 点击蒙版显示</p>
+            </div>
           </header>
 
           <div className="text-body">
@@ -59,7 +68,7 @@ const ArticleReader = ({
 
           <div className="controls">
             <button className="btn-primary" onClick={() => setRevealTrigger(t => t + 1)}>Show All</button>
-            <button className="btn-secondary" onClick={() => setResetTrigger(t => t + 1)}>Reset</button>
+            <button className="btn-secondary" onClick={() => setResetCounter(t => t + 1)}>Reset</button>
           </div>
         </div>
 

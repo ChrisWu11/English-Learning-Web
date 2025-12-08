@@ -1,0 +1,50 @@
+[
+  {
+    "id": "daily-essentials",
+    "title": "日常交流基础",
+    "description": "简单日常对话，适合热身。",
+    "lines": [
+      "Good morning, how are you today?",
+      "I would like a cup of tea, please.",
+      "Could you tell me the time, please?",
+      "Let's meet at the station at noon.",
+      "Thank you for your help, I appreciate it."
+    ]
+  },
+  {
+    "id": "travel-checklist",
+    "title": "旅行场景",
+    "description": "机场、酒店和出行的常见表达。",
+    "lines": [
+      "Where can I check in for my flight?",
+      "The train to Oxford leaves from platform five.",
+      "I booked a double room for two nights.",
+      "Could you recommend a good local restaurant?",
+      "What time does breakfast start in the hotel?"
+    ]
+  },
+  {
+    "id": "presentation-focus",
+    "title": "演讲与表达",
+    "description": "帮助你练习清晰表达和演讲节奏。",
+    "lines": [
+      "Today I will share three key findings from our research.",
+      "First, we observed a significant increase in user engagement.",
+      "Second, the new design reduced support requests by half.",
+      "Finally, we plan to roll out the feature globally next quarter.",
+      "Thank you for your attention, and I look forward to your questions."
+    ]
+  },
+  {
+    "id": "job-interview",
+    "title": "求职面试",
+    "description": "用于模拟面试的高频问答。",
+    "lines": [
+      "Could you introduce yourself briefly?",
+      "What motivated you to apply for this position?",
+      "Tell me about a challenge you solved in your previous role.",
+      "How do you prioritize tasks when deadlines conflict?",
+      "Where do you see your career progressing in the next five years?"
+    ]
+  }
+]
