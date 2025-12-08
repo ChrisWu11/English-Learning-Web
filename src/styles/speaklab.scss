@@ -198,6 +198,112 @@
   }
 }
 
+.preset-panel {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 16px 60px rgba(15, 23, 42, 0.08);
+  border: 1px solid #eef2ff;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    .label { font-weight: 800; }
+    .muted { color: #6c7a97; font-size: 14px; }
+  }
+
+  .preset-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+  }
+}
+
+.preset-card {
+  text-align: left;
+  border: 1px solid #e2e8f0;
+  background: linear-gradient(135deg, #f8fbff, #ffffff);
+  color: #0f172a;
+  padding: 14px;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #cbd5ff;
+    box-shadow: 0 16px 50px rgba(99, 102, 241, 0.14);
+  }
+
+  &__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__desc {
+    color: #475569;
+    line-height: 1.5;
+    min-height: 42px;
+  }
+
+  &__json {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 12px;
+    line-height: 1.4;
+    height: 120px;
+    overflow: auto;
+    margin: 0;
+  }
+
+  &__cta {
+    color: #4f46e5;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    &::after {
+      content: '→';
+      font-weight: 900;
+    }
+  }
+
+  &--active {
+    border-color: #a5b4fc;
+    box-shadow: 0 18px 60px rgba(79, 70, 229, 0.2);
+    background: linear-gradient(135deg, #eef2ff, #ffffff);
+
+    .preset-card__cta {
+      color: #1f2937;
+      &::after { content: '✓'; }
+    }
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eef2ff;
+  color: #475569;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 12px;
+}
+
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));

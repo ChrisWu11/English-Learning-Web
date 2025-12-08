@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SentenceTrainer from '../components/SentenceTrainer';
+import presets from '../data/speaklabPresets.json';
 import '../styles/speaklab.scss';
 
 function splitIntoSentences(text = '') {
@@ -13,8 +14,14 @@ export default function SpeakLab() {
   const [input, setInput] = useState(
     'London is a city full of stories.\nSpeak clearly to be understood.\nPractice makes perfect!'
   );
+  const [activePreset, setActivePreset] = useState('');
 
   const sentences = useMemo(() => splitIntoSentences(input), [input]);
+
+  const handlePresetSelect = (preset) => {
+    setInput(preset.lines.join('\n'));
+    setActivePreset(preset.id);
+  };
 
   return (
     <div className="speaklab-page">
@@ -44,6 +51,37 @@ export default function SpeakLab() {
             </div>
           </Link>
         </header>
+
+        <section className="preset-panel">
+          <div className="preset-panel__header">
+            <div>
+              <p className="label">例句目录（点击一键导入）</p>
+              <p className="muted">所有内容以 JSON 定义，便于扩展或自定义。</p>
+            </div>
+            <div className="hint">选择适合的场景，自动填充到下方输入框。</div>
+          </div>
+          <div className="preset-grid">
+            {presets.map((preset) => {
+              const isActive = activePreset === preset.id;
+              return (
+                <button
+                  key={preset.id}
+                  className={`preset-card ${isActive ? 'preset-card--active' : ''}`}
+                  onClick={() => handlePresetSelect(preset)}
+                  type="button"
+                >
+                  <div className="preset-card__meta">
+                    <p className="label">{preset.title}</p>
+                    <span className="badge">{preset.lines.length} 句</span>
+                  </div>
+                  <p className="preset-card__desc">{preset.description}</p>
+                  <pre className="preset-card__json">{JSON.stringify(preset.lines, null, 2)}</pre>
+                  <span className="preset-card__cta">{isActive ? '已导入' : '点击导入'}</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
 
         <section className="input-panel">
           <div className="panel-header">
