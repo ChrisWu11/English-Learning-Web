@@ -6,17 +6,19 @@ import '../styles/Layout.scss';
 const ArticleReader = ({ 
   article, 
   paragraphs, 
-  vocabList, 
-  onToggleNav, 
-  isVocabOpen, 
-  onToggleVocab 
+  vocabList,
+  onToggleNav,
+  isVocabOpen,
+  onToggleVocab
 }) => {
   const [revealTrigger, setRevealTrigger] = useState(0);
-  const [resetTrigger, setResetTrigger] = useState(0);
+  const [resetCounter, setResetCounter] = useState(0);
+
+  const resetTrigger = Array.from(article.id).reduce((acc, char) => acc + char.charCodeAt(0), 0) + resetCounter;
 
   useEffect(() => {
-    document.querySelector('.content-scroll-area').scrollTop = 0;
-    setResetTrigger(t => t + 1);
+    const area = document.querySelector('.content-scroll-area');
+    if (area) area.scrollTop = 0;
   }, [article.id]);
 
   return (
@@ -59,7 +61,7 @@ const ArticleReader = ({
 
           <div className="controls">
             <button className="btn-primary" onClick={() => setRevealTrigger(t => t + 1)}>Show All</button>
-            <button className="btn-secondary" onClick={() => setResetTrigger(t => t + 1)}>Reset</button>
+            <button className="btn-secondary" onClick={() => setResetCounter(t => t + 1)}>Reset</button>
           </div>
         </div>
 
