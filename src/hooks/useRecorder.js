@@ -1,20 +1,52 @@
 import { useEffect, useRef, useState } from 'react';
 
+const TARGET_SAMPLES = 64;
+
 export function useRecorder() {
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState('');
   const [error, setError] = useState('');
+  const [waveform, setWaveform] = useState([]);
   const [isSupported] = useState(() => typeof window !== 'undefined' && !!window.MediaRecorder);
 
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
   const streamRef = useRef(null);
+  const analyserRef = useRef(null);
+  const animationRef = useRef(null);
+  const audioContextRef = useRef(null);
+  const dataArrayRef = useRef(null);
 
-  useEffect(() => () => {
+  const teardownStream = () => {
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
     }
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
+    analyserRef.current = null;
+  };
+
+  useEffect(() => () => {
+    teardownStream();
+    if (animationRef.current) cancelAnimationFrame(animationRef.current);
   }, []);
+
+  const pumpWaveform = () => {
+    if (!analyserRef.current || !dataArrayRef.current) return;
+    analyserRef.current.getByteTimeDomainData(dataArrayRef.current);
+    const { length } = dataArrayRef.current;
+    const step = Math.max(1, Math.floor(length / TARGET_SAMPLES));
+    const snapshot = [];
+    for (let i = 0; i < length; i += step) {
+      const value = (dataArrayRef.current[i] - 128) / 128;
+      snapshot.push(value);
+    }
+    setWaveform(snapshot);
+    animationRef.current = requestAnimationFrame(pumpWaveform);
+  };
 
   const startRecording = async () => {
     if (!isSupported || isRecording) return;
@@ -23,6 +55,17 @@ export function useRecorder() {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
       const recorder = new MediaRecorder(stream);
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const source = audioContext.createMediaStreamSource(stream);
+      const analyser = audioContext.createAnalyser();
+      analyser.fftSize = 1024;
+      dataArrayRef.current = new Uint8Array(analyser.fftSize);
+      source.connect(analyser);
+      analyser.connect(audioContext.destination);
+
+      audioContextRef.current = audioContext;
+      analyserRef.current = analyser;
+
       chunksRef.current = [];
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -34,14 +77,14 @@ export function useRecorder() {
         if (audioURL) URL.revokeObjectURL(audioURL);
         setAudioURL(URL.createObjectURL(blob));
         chunksRef.current = [];
-        if (streamRef.current) {
-          streamRef.current.getTracks().forEach(track => track.stop());
-          streamRef.current = null;
-        }
+        teardownStream();
+        setWaveform([]);
+        if (animationRef.current) cancelAnimationFrame(animationRef.current);
       };
       mediaRecorderRef.current = recorder;
       recorder.start();
       setIsRecording(true);
+      pumpWaveform();
     } catch (err) {
       setError(err?.message || 'Unable to start recording');
     }
@@ -57,12 +100,14 @@ export function useRecorder() {
     if (audioURL) URL.revokeObjectURL(audioURL);
     setAudioURL('');
     chunksRef.current = [];
+    setWaveform([]);
   };
 
   return {
     isSupported,
     isRecording,
     audioURL,
+    waveform,
     error,
     startRecording,
     stopRecording,
