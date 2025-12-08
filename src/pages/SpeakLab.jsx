@@ -17,55 +17,57 @@ export default function SpeakLab() {
 
   return (
     <div className="speaklab-page">
-      <header className="speaklab-hero">
-        <div>
-          <p className="eyebrow">SpeakLab · Browser-only MVP</p>
-          <h1>免费英式口语训练房</h1>
-          <p className="lede">
-            使用浏览器自带的语音合成功能 (SpeechSynthesis)、录音 (MediaRecorder)、语音识别
-            (SpeechRecognition) 打造的零成本口语练习工具。输入你的练习文本，逐句练到熟练。
-          </p>
-          <div className="pill-row">
-            <span className="pill">英式发音 TTS</span>
-            <span className="pill">录音 + 回放</span>
-            <span className="pill">自动语音识别</span>
-            <span className="pill">编辑距离评分</span>
-          </div>
-        </div>
-        <div className="glass-card">
-          <p>立即开始</p>
-          <p className="glass-card__title">把你的学习材料复制进来</p>
-          <p className="glass-card__desc">按句拆分，生成训练卡片。</p>
-        </div>
-      </header>
-
-      <section className="input-panel">
-        <div className="panel-header">
+      <div className="speaklab-main">
+        <header className="speaklab-hero">
           <div>
-            <p className="label">输入练习文本（自动按句拆分）</p>
-            <p className="muted">英文最佳，支持标点 . ? ! 作为分句依据。</p>
+            <p className="eyebrow">SpeakLab · Browser-only MVP</p>
+            <h1>免费英式口语训练房</h1>
+            <p className="lede">
+              使用浏览器自带的语音合成功能 (SpeechSynthesis)、录音 (MediaRecorder)、语音识别
+              (SpeechRecognition) 打造的零成本口语练习工具。输入你的练习文本，逐句练到熟练。
+            </p>
+            <div className="pill-row">
+              <span className="pill">英式发音 TTS</span>
+              <span className="pill">录音 + 回放</span>
+              <span className="pill">自动语音识别</span>
+              <span className="pill">编辑距离评分</span>
+            </div>
           </div>
-          <div className="hint">🔥 录音时将同时触发 en-GB 的语音识别</div>
-        </div>
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          rows={5}
-          placeholder="Paste or type any English paragraph here..."
-        />
-        <div className="split-preview">
-          <span className="pill">已拆分 {sentences.length} 句</span>
-        </div>
-      </section>
+          <div className="glass-card">
+            <p>立即开始</p>
+            <p className="glass-card__title">把你的学习材料复制进来</p>
+            <p className="glass-card__desc">按句拆分，生成训练卡片。</p>
+          </div>
+        </header>
 
-      <section className="cards-grid">
-        {sentences.length === 0 && (
-          <div className="empty">请输入内容以生成训练卡片。</div>
-        )}
-        {sentences.map((sentence, idx) => (
-          <SentenceTrainer key={`${sentence}-${idx}`} sentence={sentence} />
-        ))}
-      </section>
+        <section className="input-panel">
+          <div className="panel-header">
+            <div>
+              <p className="label">输入练习文本（自动按句拆分）</p>
+              <p className="muted">英文最佳，支持标点 . ? ! 作为分句依据。</p>
+            </div>
+            <div className="hint">🔥 录音时将同时触发 en-GB 的语音识别</div>
+          </div>
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            rows={5}
+            placeholder="Paste or type any English paragraph here..."
+          />
+          <div className="split-preview">
+            <span className="pill">已拆分 {sentences.length} 句</span>
+          </div>
+        </section>
+
+        <section className="cards-grid">
+          {sentences.length === 0 && (
+            <div className="empty">请输入内容以生成训练卡片。</div>
+          )}
+          {sentences.map((sentence, idx) => (
+            <SentenceTrainer key={`${sentence}-${idx}`} sentence={sentence} />
+          ))}
+        </section>
+      </div>
 
       <footer className="speaklab-footer">
         <div>

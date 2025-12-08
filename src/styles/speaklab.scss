@@ -5,6 +5,16 @@
   background: radial-gradient(circle at 10% 20%, #f2fbff 0, #fef9ff 25%, #ffffff 45%);
   min-height: 100vh;
   color: #1f2a44;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.speaklab-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
 }
 
 .speaklab-hero {
@@ -298,6 +308,8 @@
   gap: 12px;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
 
   a {
     color: #a5b4fc;
@@ -433,13 +445,18 @@ button {
 
 @media (max-width: 720px) {
   .speaklab-page {
-    padding: 20px 16px 110px;
+    padding: 20px 16px 140px;
+  }
+
+  .speaklab-main {
+    gap: 20px;
   }
 
   .speaklab-footer {
     flex-direction: column;
     align-items: flex-start;
     gap: 6px;
+    padding: 20px;
   }
 
   .waveform-modal__header {
