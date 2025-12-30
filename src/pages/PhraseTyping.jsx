@@ -133,13 +133,15 @@ export default function PhraseTyping() {
       if (event.key === ' ') {
         event.preventDefault();
         playKeyClick();
-        setTypedValue((prev) => `${prev} `);
+        setTypedValue((prev) => {
+          const nextValue = `${prev} `;
+          if (normalizePhrase(nextValue) === normalizedTarget) {
+            void handleCheck(nextValue);
+          }
+          return nextValue;
+        });
         if (status !== 'idle') {
           setStatus('idle');
-        }
-        const nextValue = `${typedValue} `;
-        if (normalizePhrase(nextValue) === normalizedTarget) {
-          void handleCheck();
         }
         return;
       }
@@ -156,13 +158,15 @@ export default function PhraseTyping() {
       if (event.key.length === 1 && !event.metaKey && !event.ctrlKey && !event.altKey) {
         event.preventDefault();
         playKeyClick();
-        const nextValue = `${typedValue}${event.key}`.toLowerCase();
-        setTypedValue(nextValue);
+        setTypedValue((prev) => {
+          const nextValue = `${prev}${event.key}`.toLowerCase();
+          if (normalizePhrase(nextValue) === normalizedTarget) {
+            void handleCheck(nextValue);
+          }
+          return nextValue;
+        });
         if (status !== 'idle') {
           setStatus('idle');
-        }
-        if (normalizePhrase(nextValue) === normalizedTarget) {
-          void handleCheck();
         }
       }
     };
@@ -171,8 +175,8 @@ export default function PhraseTyping() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentPhrase, status]);
 
-  const handleCheck = async () => {
-    const normalizedInput = normalizePhrase(typedValue);
+  const handleCheck = async (overrideValue) => {
+    const normalizedInput = normalizePhrase(overrideValue ?? typedValue);
     if (!normalizedInput) return;
     const isCorrect = normalizedInput === normalizedTarget;
     setStatus(isCorrect ? 'correct' : 'wrong');
