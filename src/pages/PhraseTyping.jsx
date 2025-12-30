@@ -33,9 +33,10 @@ export default function PhraseTyping() {
   const articleTitle = initialPayload?.articleTitle ?? '短语拼写复习';
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [inputValue, setInputValue] = useState('');
+  const [typedValue, setTypedValue] = useState('');
   const [status, setStatus] = useState('idle');
   const [lastChecked, setLastChecked] = useState(null);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const currentPhrase = phrases[currentIndex]?.text || '';
   const normalizedTarget = useMemo(
@@ -50,9 +51,10 @@ export default function PhraseTyping() {
   }, [phrases, currentPhrase]);
 
   useEffect(() => {
-    setInputValue('');
+    setTypedValue('');
     setStatus('idle');
     setLastChecked(null);
+    setShowConfetti(false);
   }, [currentIndex]);
 
   const handleSpeak = (text) => {
@@ -78,38 +80,77 @@ export default function PhraseTyping() {
       context.resume();
     }
 
-    const oscillator = context.createOscillator();
-    const gainNode = context.createGain();
-    oscillator.type = 'square';
-    oscillator.frequency.setValueAtTime(280 + Math.random() * 80, context.currentTime);
-    gainNode.gain.setValueAtTime(0.12, context.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.06);
-    oscillator.connect(gainNode);
-    gainNode.connect(context.destination);
-    oscillator.start();
-    oscillator.stop(context.currentTime + 0.06);
+    const time = context.currentTime;
+    const clickOsc = context.createOscillator();
+    const clickGain = context.createGain();
+    clickOsc.type = 'square';
+    clickOsc.frequency.setValueAtTime(520 + Math.random() * 80, time);
+    clickGain.gain.setValueAtTime(0.16, time);
+    clickGain.gain.exponentialRampToValueAtTime(0.001, time + 0.04);
+    clickOsc.connect(clickGain);
+    clickGain.connect(context.destination);
+    clickOsc.start(time);
+    clickOsc.stop(time + 0.045);
+
+    const noiseBuffer = context.createBuffer(1, context.sampleRate * 0.06, context.sampleRate);
+    const bufferData = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferData.length; i += 1) {
+      bufferData[i] = (Math.random() * 2 - 1) * (1 - i / bufferData.length);
+    }
+    const noise = context.createBufferSource();
+    noise.buffer = noiseBuffer;
+    const noiseGain = context.createGain();
+    noiseGain.gain.setValueAtTime(0.18, time);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+    noise.connect(noiseGain);
+    noiseGain.connect(context.destination);
+    noise.start(time);
+    noise.stop(time + 0.055);
   };
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value.toLowerCase());
-    if (status !== 'idle') {
-      setStatus('idle');
-    }
-  };
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.shiftKey && event.key.toLowerCase() === 'a') {
+        event.preventDefault();
+        handleSpeak(currentPhrase);
+        return;
+      }
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      handleCheck();
-      return;
-    }
-    if (event.key.length === 1) {
-      playKeyClick();
-    }
-  };
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        if (status === 'correct') {
+          handleNext();
+          return;
+        }
+        handleCheck();
+        return;
+      }
+
+      if (event.key === 'Backspace') {
+        event.preventDefault();
+        setTypedValue((prev) => prev.slice(0, -1));
+        if (status !== 'idle') {
+          setStatus('idle');
+        }
+        return;
+      }
+
+      if (event.key.length === 1 && !event.metaKey && !event.ctrlKey && !event.altKey) {
+        event.preventDefault();
+        playKeyClick();
+        setTypedValue((prev) => `${prev}${event.key}`.toLowerCase());
+        if (status !== 'idle') {
+          setStatus('idle');
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentPhrase, status]);
 
   const handleCheck = () => {
-    const normalizedInput = normalizePhrase(inputValue);
+    const normalizedInput = normalizePhrase(typedValue);
     if (!normalizedInput) return;
     const isCorrect = normalizedInput === normalizedTarget;
     setStatus(isCorrect ? 'correct' : 'wrong');
@@ -118,6 +159,10 @@ export default function PhraseTyping() {
       target: normalizedTarget,
       correct: isCorrect,
     });
+    if (isCorrect) {
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 1200);
+    }
   };
 
   const handleNext = () => {
@@ -148,7 +193,7 @@ export default function PhraseTyping() {
   }
 
   const phraseCharacters = currentPhrase.split('').map((char, idx) => {
-    const typedChar = inputValue[idx];
+    const typedChar = typedValue[idx];
     if (!typedChar) {
       return (
         <span key={`${char}-${idx}`} className={`char ${char === ' ' ? 'space' : ''}`}>
@@ -170,7 +215,7 @@ export default function PhraseTyping() {
         <div>
           <p className="eyebrow">Typing Review</p>
           <h1>{articleTitle}</h1>
-          <p className="muted">听音频，拼写完整短语。大小写不影响判断。</p>
+          <p className="muted">听音频，直接输入拼写完整短语。大小写不影响判断。</p>
         </div>
         <Link className="ghost-link" to="/">返回主页</Link>
       </header>
@@ -186,18 +231,9 @@ export default function PhraseTyping() {
 
           <div className="phrase-display">{phraseCharacters}</div>
 
-          <div className="input-area">
-            <label htmlFor="phrase-input">请输入你听到的短语</label>
-            <input
-              id="phrase-input"
-              type="text"
-              value={inputValue}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-              placeholder="Start typing here..."
-              autoComplete="off"
-              spellCheck={false}
-            />
+          <div className="typing-hint">
+            <span>直接输入拼写，Enter 检查，正确后 Enter 进入下一条。</span>
+            <span>Shift + A 重听短语。</span>
           </div>
 
           <div className="result-row">
@@ -236,6 +272,13 @@ export default function PhraseTyping() {
           </div>
         </section>
       </main>
+      {showConfetti && (
+        <div className="confetti-layer" aria-hidden>
+          {Array.from({ length: 24 }).map((_, index) => (
+            <span key={`confetti-${index}`} className="confetti-piece" />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

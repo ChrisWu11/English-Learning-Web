@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 .phrase-typing-page {
   min-height: 100vh;
   background: radial-gradient(circle at top, #1d2333 0%, #0b0f14 48%, #06080c 100%);
@@ -155,30 +157,17 @@
   }
 }
 
-.input-area {
-  display: grid;
-  gap: 10px;
-
-  label {
-    color: rgba(230, 238, 249, 0.7);
-    font-size: 14px;
-  }
-
-  input {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
-    padding: 14px 16px;
-    color: #fff;
-    font-size: 16px;
-    transition: border 0.2s ease, box-shadow 0.2s ease;
-
-    &:focus {
-      outline: none;
-      border-color: rgba(123, 168, 255, 0.8);
-      box-shadow: 0 0 0 4px rgba(123, 168, 255, 0.2);
-    }
-  }
+.typing-hint {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: rgba(230, 238, 249, 0.7);
+  font-size: 14px;
+  text-align: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px dashed rgba(123, 168, 255, 0.3);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .result-row {
@@ -249,6 +238,42 @@
   padding: 18px 22px;
   border-radius: 16px;
   border: 1px solid rgba(130, 170, 255, 0.18);
+}
+
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 20;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  width: 10px;
+  height: 16px;
+  background: linear-gradient(180deg, #6a8cff, #4dd2a6);
+  border-radius: 4px;
+  animation: confettiFall 1.2s ease-out forwards;
+  opacity: 0.9;
+}
+
+.confetti-piece:nth-child(2n) {
+  background: linear-gradient(180deg, #ff9a9a, #ffd28f);
+}
+
+.confetti-piece:nth-child(3n) {
+  background: linear-gradient(180deg, #8df7ff, #6a8cff);
+}
+
+@for $i from 1 through 24 {
+  .confetti-piece:nth-child(#{$i}) {
+    left: #{20 + ($i * 3)}%;
+    animation-delay: #{($i * 0.02)}s;
+    transform: translateY(0) rotate(#{math.random(360)}deg);
+  }
 }
 
 .progress-bar {
@@ -335,6 +360,20 @@
   }
   80% {
     transform: translateX(4px);
+  }
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translate(-50%, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, 340px) rotate(320deg);
+    opacity: 0;
   }
 }
 
