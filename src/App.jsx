@@ -6,6 +6,7 @@ import ArticleReader from './components/ArticleReader';
 import { articles } from './data';
 import { useArticleParser } from './hooks/useArticleParser';
 import SpeakLab from './pages/SpeakLab';
+import PhraseTyping from './pages/PhraseTyping';
 import './styles/main.scss';
 
 function ArticleApp() {
@@ -88,6 +89,7 @@ function App() {
     <Routes>
       <Route path="/" element={<ArticleApp />} />
       <Route path="/speaklab" element={<SpeakLab />} />
+      <Route path="/phrase-typing" element={<PhraseTyping />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

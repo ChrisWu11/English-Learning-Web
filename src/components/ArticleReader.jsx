@@ -74,7 +74,7 @@ const ArticleReader = ({
 
         {/* 右侧单词表：包裹一层 div 以便处理移动端 class */}
         <div className={`vocab-panel ${isVocabOpen ? 'mobile-open' : ''}`}>
-           <VocabSidebar vocabList={vocabList} />
+           <VocabSidebar vocabList={vocabList} articleTitle={article.title} />
         </div>
       </div>
 

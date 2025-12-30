@@ -266,6 +266,25 @@
     }
   }
 
+  .vocab-cta {
+    width: 100%;
+    margin-bottom: 14px;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, $accent-color, #4ba3ff);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 8px 16px rgba(45, 127, 249, 0.25);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(45, 127, 249, 0.35);
+    }
+  }
+
   .vocab-item {
     padding: 10px 12px;
     border-bottom: 1px solid #f0f0f0;
