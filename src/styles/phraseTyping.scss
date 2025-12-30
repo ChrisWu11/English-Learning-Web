@@ -147,7 +147,10 @@
   transform: translateY(-2px);
 
   &.filled {
-    border-bottom-color: rgba(123, 168, 255, 0.6);
+    border-bottom-color: transparent;
+    min-width: 0;
+    margin: 0;
+    opacity: 0;
   }
 }
 

@@ -113,6 +113,7 @@ export default function PhraseTyping() {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
+      if (event.isComposing) return;
       if (event.shiftKey && event.key.toLowerCase() === 'a') {
         event.preventDefault();
         handleSpeak(currentPhrase);
@@ -125,7 +126,7 @@ export default function PhraseTyping() {
           handleNext();
           return;
         }
-        handleCheck();
+        void handleCheck();
         return;
       }
 
@@ -217,7 +218,7 @@ export default function PhraseTyping() {
     if (!segment) return null;
     if (segment.trim() === '') {
       const typedSpace = typedValue.slice(cursor, cursor + segment.length);
-      const isFilled = Boolean(typedSpace.trim());
+      const isFilled = typedSpace.length === segment.length;
       cursor += segment.length;
       return (
         <span
