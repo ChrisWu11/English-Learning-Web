@@ -142,12 +142,14 @@
 .word-gap {
   display: inline-block;
   min-width: 18px;
-  border-bottom: 2px dashed rgba(255, 255, 255, 0.2);
+  color: rgba(123, 168, 255, 0.65);
+  font-size: 18px;
+  line-height: 1;
   margin: 0 6px;
   transform: translateY(-2px);
 
   &.filled {
-    border-bottom-color: transparent;
+    color: transparent;
     min-width: 0;
     margin: 0;
     opacity: 0;
@@ -267,22 +269,22 @@
 }
 
 .hint-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(123, 168, 255, 0.08);
   border-radius: 14px;
   padding: 14px 16px;
-  border: 1px solid rgba(255, 107, 107, 0.3);
+  border: 1px solid rgba(123, 168, 255, 0.35);
 
   .label {
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: rgba(255, 107, 107, 0.7);
+    color: rgba(123, 168, 255, 0.8);
     margin-bottom: 6px;
   }
 
   .answer {
     font-size: 16px;
-    color: #ffd6d6;
+    color: #e6eeff;
   }
 }
 

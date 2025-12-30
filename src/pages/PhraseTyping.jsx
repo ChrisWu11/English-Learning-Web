@@ -65,7 +65,7 @@ export default function PhraseTyping() {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'en-GB';
-    utterance.rate = 0.85;
+    utterance.rate = 0.72;
     const voices = window.speechSynthesis.getVoices();
     const britishVoice = voices.find(v => v.lang === 'en-GB');
     if (britishVoice) utterance.voice = britishVoice;
@@ -130,6 +130,20 @@ export default function PhraseTyping() {
         return;
       }
 
+      if (event.key === ' ') {
+        event.preventDefault();
+        playKeyClick();
+        setTypedValue((prev) => `${prev} `);
+        if (status !== 'idle') {
+          setStatus('idle');
+        }
+        const nextValue = `${typedValue} `;
+        if (normalizePhrase(nextValue) === normalizedTarget) {
+          void handleCheck();
+        }
+        return;
+      }
+
       if (event.key === 'Backspace') {
         event.preventDefault();
         setTypedValue((prev) => prev.slice(0, -1));
@@ -142,9 +156,13 @@ export default function PhraseTyping() {
       if (event.key.length === 1 && !event.metaKey && !event.ctrlKey && !event.altKey) {
         event.preventDefault();
         playKeyClick();
-        setTypedValue((prev) => `${prev}${event.key}`.toLowerCase());
+        const nextValue = `${typedValue}${event.key}`.toLowerCase();
+        setTypedValue(nextValue);
         if (status !== 'idle') {
           setStatus('idle');
+        }
+        if (normalizePhrase(nextValue) === normalizedTarget) {
+          void handleCheck();
         }
       }
     };
@@ -226,7 +244,9 @@ export default function PhraseTyping() {
           className={`word-gap ${isFilled ? 'filled' : ''}`}
           style={{ width: `${Math.max(segment.length, 1) * 18}px` }}
           aria-hidden
-        />
+        >
+          ·
+        </span>
       );
     }
 
