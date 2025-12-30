@@ -3,11 +3,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { phraseTranslations } from '../data/phraseTranslations';
 import '../styles/phraseTyping.scss';
 
-const normalizePhrase = (text = '') =>
-  text
+const normalizePhrase = (text = '') => {
+  if (typeof text !== 'string') return '';
+  return text
     .toLowerCase()
     .replace(/\s+/g, ' ')
     .trim();
+};
 
 const fetchSessionData = () => {
   try {
@@ -321,7 +323,7 @@ export default function PhraseTyping() {
               <button className="ghost" type="button" onClick={() => setShowAnswer(true)}>
                 显示答案
               </button>
-              <button className="check-btn" type="button" onClick={handleCheck}>
+              <button className="check-btn" type="button" onClick={() => handleCheck()}>
                 检查答案
               </button>
             </div>
