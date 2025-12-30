@@ -286,7 +286,7 @@ export default function PhraseTyping() {
         <div>
           <p className="eyebrow">Typing Review</p>
           <h1>{articleTitle}</h1>
-          <p className="muted">听音频，直接输入拼写完整短语。大小写不影响判断。</p>
+          <p className="muted">听音频，直接输入拼写完整短语。</p>
         </div>
         <Link className="ghost-link" to="/">返回主页</Link>
       </header>
@@ -309,7 +309,7 @@ export default function PhraseTyping() {
           )}
 
           <div className="typing-hint">
-            <span>直接输入拼写，Enter 检查，正确后 Enter 进入下一条。</span>
+            <span>正确后 Enter 进入下一条。</span>
             <span>Shift + A 重听短语。</span>
           </div>
 

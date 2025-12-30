@@ -42,18 +42,16 @@ export default function SpeakLab() {
         <header className="speaklab-hero">
           <div>
             <div className="hero-meta">
-              <p className="eyebrow">SpeakLab · Browser-only MVP</p>
+              <p className="eyebrow">SpeakLab</p>
             </div>
-            <h1>免费英式口语训练房</h1>
+            <h1>英式口语训练房</h1>
             <p className="lede">
-              使用语音合成功能 (SpeechSynthesis)、录音 (MediaRecorder)、语音识别
-              (SpeechRecognition) 打造的零成本口语练习工具。输入你的练习文本，逐句练到熟练。
+              使用语音识别 (SpeechRecognition) 打造的口语练习工具。输入你的练习文本，逐句练到熟练。
             </p>
           <div className="pill-row">
             <span className="pill">英式发音 TTS</span>
             <span className="pill">录音 + 回放</span>
             <span className="pill">自动语音识别</span>
-            <span className="pill">编辑距离评分</span>
           </div>
         </div>
         <Link className="glass-card back-card" to="/">
@@ -107,7 +105,7 @@ export default function SpeakLab() {
       <footer className="speaklab-footer">
         <div>
           <p className="eyebrow">Thanks for visiting SpeakLab</p>
-          <p>完全基于浏览器原生 API 打造的零成本口语练习 MVP。</p>
+          <p>基于浏览器原生 API 打造的口语练习工具。</p>
         </div>
         <div>
           <p>作者：Chris Wu</p>

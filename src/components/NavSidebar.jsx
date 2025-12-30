@@ -3,7 +3,7 @@ import '../styles/Layout.scss';
 const NavSidebar = ({ articles, activeId, onSelect, collapsed }) => {
   return (
     <div className={`sidebar-nav ${collapsed ? 'collapsed' : ''}`}>
-      <h2>🇬🇧 Study Journal</h2>
+      <h2>🇬🇧 English Study</h2>
       <nav>
         {articles.map((item) => (
           <div 
