@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { phraseTranslations } from '../data/phraseTranslations';
 import '../styles/phraseTyping.scss';
 
 const normalizePhrase = (text = '') =>
@@ -37,6 +38,7 @@ export default function PhraseTyping() {
   const [status, setStatus] = useState('idle');
   const [lastChecked, setLastChecked] = useState(null);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [showMeaning, setShowMeaning] = useState(false);
 
   const currentPhrase = phrases[currentIndex]?.text || '';
   const normalizedTarget = useMemo(
@@ -49,6 +51,7 @@ export default function PhraseTyping() {
     setStatus('idle');
     setLastChecked(null);
     setShowAnswer(false);
+    setShowMeaning(false);
   }, [currentIndex]);
 
   useEffect(() => {
@@ -159,6 +162,7 @@ export default function PhraseTyping() {
       target: normalizedTarget,
       correct: isCorrect,
     });
+    setShowMeaning(true);
     if (isCorrect) {
       if (!confettiRef.current) {
         try {
@@ -193,6 +197,7 @@ export default function PhraseTyping() {
   };
 
   const progressValue = phrases.length ? ((currentIndex + 1) / phrases.length) * 100 : 0;
+  const translationText = phraseTranslations[normalizedTarget] || '暂无中文释义';
 
   if (!phrases.length) {
     return (
@@ -207,19 +212,43 @@ export default function PhraseTyping() {
     );
   }
 
-  const phraseCharacters = currentPhrase.split('').map((char, idx) => {
-    const typedChar = typedValue[idx];
-    if (!typedChar) {
+  let cursor = 0;
+  const phraseCharacters = currentPhrase.split(/(\s+)/).map((segment, segmentIndex) => {
+    if (!segment) return null;
+    if (segment.trim() === '') {
+      const typedSpace = typedValue.slice(cursor, cursor + segment.length);
+      const isFilled = Boolean(typedSpace.trim());
+      cursor += segment.length;
       return (
-        <span key={`${char}-${idx}`} className={`char ${char === ' ' ? 'space' : ''}`}>
-          {char === ' ' ? '·' : '—'}
-        </span>
+        <span
+          key={`space-${segmentIndex}`}
+          className={`word-gap ${isFilled ? 'filled' : ''}`}
+          style={{ width: `${Math.max(segment.length, 1) * 18}px` }}
+          aria-hidden
+        />
       );
     }
-    const match = typedChar.toLowerCase() === char.toLowerCase();
+
+    const letters = segment.split('').map((char, idx) => {
+      const typedChar = typedValue[cursor + idx];
+      if (!typedChar) {
+        return (
+          <span key={`${char}-${cursor + idx}`} className="char">
+            —
+          </span>
+        );
+      }
+      const match = typedChar.toLowerCase() === char.toLowerCase();
+      return (
+        <span key={`${char}-${cursor + idx}`} className={`char typed ${match ? 'match' : 'mismatch'}`}>
+          {typedChar}
+        </span>
+      );
+    });
+    cursor += segment.length;
     return (
-      <span key={`${char}-${idx}`} className={`char typed ${match ? 'match' : 'mismatch'}`}>
-        {typedChar}
+      <span key={`word-${segmentIndex}`} className="word-block">
+        {letters}
       </span>
     );
   });
@@ -245,6 +274,12 @@ export default function PhraseTyping() {
           </div>
 
           <div className="phrase-display">{phraseCharacters}</div>
+          {showMeaning && (
+            <div className="phrase-meaning">
+              <span className="meaning-label">中文意思</span>
+              <span className="meaning-text">{translationText}</span>
+            </div>
+          )}
 
           <div className="typing-hint">
             <span>直接输入拼写，Enter 检查，正确后 Enter 进入下一条。</span>

@@ -124,23 +124,36 @@
 
 .phrase-display {
   font-size: clamp(24px, 3vw, 32px);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   text-align: center;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
   min-height: 54px;
+}
+
+.word-block {
+  display: inline-flex;
+  gap: 4px;
+  padding: 0 2px;
+}
+
+.word-gap {
+  display: inline-block;
+  min-width: 18px;
+  border-bottom: 2px dashed rgba(255, 255, 255, 0.2);
+  margin: 0 6px;
+  transform: translateY(-2px);
+
+  &.filled {
+    border-bottom-color: rgba(123, 168, 255, 0.6);
+  }
 }
 
 .char {
   color: rgba(255, 255, 255, 0.35);
   font-weight: 500;
-
-  &.space {
-    width: 18px;
-    text-align: center;
-  }
 
   &.typed {
     color: #dfe7ff;
@@ -166,6 +179,27 @@
   border-radius: 12px;
   border: 1px dashed rgba(123, 168, 255, 0.3);
   background: rgba(255, 255, 255, 0.03);
+}
+
+.phrase-meaning {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: center;
+  padding: 10px 12px 2px;
+  animation: fadeInUp 0.25s ease;
+}
+
+.meaning-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(123, 168, 255, 0.75);
+}
+
+.meaning-text {
+  font-size: 16px;
+  color: rgba(230, 238, 249, 0.9);
 }
 
 .result-row {
