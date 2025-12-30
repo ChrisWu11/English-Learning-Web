@@ -20,7 +20,7 @@ const fetchSessionData = () => {
 export default function PhraseTyping() {
   const location = useLocation();
   const audioContextRef = useRef(null);
-  const hasAutoPlayed = useRef(false);
+  const confettiRef = useRef(null);
 
   const initialPayload = useMemo(() => {
     if (location.state?.phrases?.length) {
@@ -36,7 +36,7 @@ export default function PhraseTyping() {
   const [typedValue, setTypedValue] = useState('');
   const [status, setStatus] = useState('idle');
   const [lastChecked, setLastChecked] = useState(null);
-  const [showConfetti, setShowConfetti] = useState(false);
+  const [showAnswer, setShowAnswer] = useState(false);
 
   const currentPhrase = phrases[currentIndex]?.text || '';
   const normalizedTarget = useMemo(
@@ -45,17 +45,16 @@ export default function PhraseTyping() {
   );
 
   useEffect(() => {
-    if (!phrases.length || hasAutoPlayed.current) return;
-    hasAutoPlayed.current = true;
-    handleSpeak(currentPhrase);
-  }, [phrases, currentPhrase]);
-
-  useEffect(() => {
     setTypedValue('');
     setStatus('idle');
     setLastChecked(null);
-    setShowConfetti(false);
+    setShowAnswer(false);
   }, [currentIndex]);
+
+  useEffect(() => {
+    if (!phrases.length) return;
+    handleSpeak(currentPhrase);
+  }, [currentIndex, phrases.length, currentPhrase]);
 
   const handleSpeak = (text) => {
     if (!('speechSynthesis' in window)) return;
@@ -63,6 +62,7 @@ export default function PhraseTyping() {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'en-GB';
+    utterance.rate = 0.85;
     const voices = window.speechSynthesis.getVoices();
     const britishVoice = voices.find(v => v.lang === 'en-GB');
     if (britishVoice) utterance.voice = britishVoice;
@@ -149,7 +149,7 @@ export default function PhraseTyping() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentPhrase, status]);
 
-  const handleCheck = () => {
+  const handleCheck = async () => {
     const normalizedInput = normalizePhrase(typedValue);
     if (!normalizedInput) return;
     const isCorrect = normalizedInput === normalizedTarget;
@@ -160,8 +160,23 @@ export default function PhraseTyping() {
       correct: isCorrect,
     });
     if (isCorrect) {
-      setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 1200);
+      if (!confettiRef.current) {
+        try {
+          const module = await import(
+            'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.module.mjs'
+          );
+          confettiRef.current = module.default || module;
+        } catch (error) {
+          confettiRef.current = null;
+        }
+      }
+      if (confettiRef.current) {
+        confettiRef.current({
+          particleCount: 120,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+      }
     }
   };
 
@@ -242,12 +257,17 @@ export default function PhraseTyping() {
               {status === 'wrong' && '❌ 拼写错误，再试一次'}
               {status === 'idle' && '准备好后按 Enter 检查'}
             </div>
-            <button className="check-btn" type="button" onClick={handleCheck}>
-              检查答案
-            </button>
+            <div className="result-actions">
+              <button className="ghost" type="button" onClick={() => setShowAnswer(true)}>
+                显示答案
+              </button>
+              <button className="check-btn" type="button" onClick={handleCheck}>
+                检查答案
+              </button>
+            </div>
           </div>
 
-          {lastChecked && !lastChecked.correct && (
+          {(showAnswer || (lastChecked && !lastChecked.correct)) && (
             <div className="hint-card">
               <p className="label">正确答案（已忽略大小写）</p>
               <p className="answer">{currentPhrase}</p>
@@ -272,13 +292,6 @@ export default function PhraseTyping() {
           </div>
         </section>
       </main>
-      {showConfetti && (
-        <div className="confetti-layer" aria-hidden>
-          {Array.from({ length: 24 }).map((_, index) => (
-            <span key={`confetti-${index}`} className="confetti-piece" />
-          ))}
-        </div>
-      )}
     </div>
   );
 }
